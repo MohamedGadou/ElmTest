@@ -15,9 +15,8 @@ namespace BookStore.API.Controllers
             _booksService = bookAppService;
         }
 
-        [HttpGet]
-        [Route("getAllBooks")]
-        public async Task<IEnumerable<BookDto>> GetAllBooksAsync(int pageSize, int pageNumber, string searchKey)
+        [HttpGet("getAllBooks")]
+        public async Task<IEnumerable<BookDto>> GetAllBooksAsync(int pageSize, int pageNumber, string? searchKey)
         {
             return await _booksService.GetAllBooksAsync(pageSize, pageNumber, searchKey);
         }

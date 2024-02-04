@@ -1,0 +1,17 @@
+<div class="container">
+  <div class="row">
+    <div class="col-lg">
+        <input class="form-control" [(ngModel)]="searchKey" (ngModelChange)="onSearch($event)" type="search" placeholder="Search" aria-label="Search">
+    </div>
+  </div>
+  <div class="row">
+    <div *ngFor="let book of books" class="col-sm">
+      <book-card [book]="book"></book-card>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm">
+        <a class="page-link" (click)="onLoadMoreClick()">Load More</a>
+    </div>
+  </div>
+</div>

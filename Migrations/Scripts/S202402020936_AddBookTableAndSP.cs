@@ -85,20 +85,31 @@ namespace Migrations.Scripts
             command.Connection.Execute(searchBooksSP);
 
             const string insertIntoBookViewCommand = @"
-                INSERT INTO [dbo].[BookView]
-                           ([Title]
-                           ,[Description]
-                           ,[Author]
-                           ,[Cover]
-                           ,[PublishedDate]
-                           ,[LastModified])
-                SELECT JSON_VALUE(b.BookInfo, '$.BookTitle'),
-                	   JSON_VALUE(b.BookInfo, '$.BookDescription'),
-                	   JSON_VALUE(b.BookInfo, '$.Author'),
-                	   JSON_VALUE(b.BookInfo, '$.CoverBase64'),
-                	   JSON_VALUE(b.BookInfo, '$.PublishDate'),
-                	   LastModified
-                FROM [dbo].[Book] as b";
+                        INSERT INTO [dbo].[BookView]
+                                                   ([Title]
+                                                   ,[Description]
+                                                   ,[Author]
+                                                   ,[PublishedDate]
+                                                   ,[Cover]
+                                                   ,[LastModified])
+                        select  
+                            info.Title as Title, 
+                            info.Description as Description, 
+                            info.Author as Author, 
+                            info.PublishDate as PublishedDate, 
+                            info.CoverBase64 as Cover, 
+                            b.LastModified as LastModified from 
+                        dbo.Book b 
+                        CROSS APPLY 
+                        OPENJSON(b.BookInfo) WITH 
+                        (
+                        	Title varchar(max)  '$.BookTitle',
+                        	Description varchar(max) '$.BookDescription',
+                        	Author varchar(max) '$.Author',
+                        	PublishDate varchar(max) '$.PublishDate',
+                        	CoverBase64 varchar(max) '$.CoverBase64'
+                        ) as info
+                        ";
             command.Connection.Execute(insertIntoBookViewCommand,commandTimeout: int.MaxValue);
 
             return "";

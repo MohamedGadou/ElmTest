@@ -18,7 +18,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors(config =>
+{
+    //config.WithOrigins("https://localhost:4200/", "http://localhost:4200/");
+    config.AllowAnyOrigin();
+});
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
